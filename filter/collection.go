@@ -11,10 +11,10 @@ package filter
 type Groups map[string][]Filter
 
 func (g Groups) AddFilter(key string, filter Filter) {
-    _, has := g[key]
-    if !has {
-        g[key] = make([]Filter, 0)
-    }
+	_, has := g[key]
+	if !has {
+		g[key] = make([]Filter, 0)
+	}
 
-    g[key] = append(g[key], filter)
+	g[key] = append(g[key], filter)
 }
