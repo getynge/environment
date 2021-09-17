@@ -55,12 +55,18 @@ func (e Environment) String() string {
 // Set sets the given key to the given value, after running all filters on the key value pair.
 // If any of the filters fail, the variable is not added to the Environment and an error is returned
 func (e Environment) Set(key, value string) (err error) {
-	filters, _ := filter.GlobalFilterGroups[key]
-	filters = append(filter.UniversalFilterGroup, filters...)
-
-	for _, f := range filters {
-		key, value, err = f.Filter(key, value)
-		if err != nil {
+	for _, f := range filter.GlobalEntranceGroup {
+		if key, value, err = f.Filter(key, value); err != nil {
+			return err
+		}
+	}
+	for _, f := range filter.GlobalGroups[key] {
+		if key, value, err = f.Filter(key, value); err != nil {
+			return err
+		}
+	}
+	for _, f := range filter.GlobalExitGroup {
+		if key, value, err = f.Filter(key, value); err != nil {
 			return err
 		}
 	}

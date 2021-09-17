@@ -1,13 +1,15 @@
 package filter
 
 var (
-	// GlobalFilterGroups is the latter half of the collection of filters applied when setting environment variables.
+	// GlobalGroups is the middle stage of filtering environment variables, this is for filtering on a per-key basis
 	// GlobalFilterGroups is a map, and a given filter will only be applied by Environment if the incoming
 	// key matches the key used in the map.
-	GlobalFilterGroups = make(Groups)
+	GlobalGroups = make(GroupMap)
 
-	// UniversalFilterGroup is the former half of the collection of filters applied when setting environment variables.
-	// Unlike GlobalFilterGroups, UniversalFilterGroup consists of a collection of filters that are applied to all
-	// environment variables.
-	UniversalFilterGroup = make(Group, 0)
+	// GlobalEntranceGroup is the first stage of filtering environment variables, this is for filtering all variables
+	// regardless of their key.
+	GlobalEntranceGroup = make(Group, 0)
+
+	// GlobalExitGroup is the final stage of filtering environment variables, like GlobalEntranceGroup it
+	GlobalExitGroup = make(Group, 0)
 )
