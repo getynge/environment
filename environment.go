@@ -39,11 +39,15 @@ func Shell() (e Environment) {
 	return e
 }
 
+// String returns a runnable export command for this set of environment variables
+//
+// e.g. if e contains the key value pair "GREETING": "Hello World!", then String would return
+// `export GREETING="Hello World!"`
 func (e Environment) String() string {
 	b := new(strings.Builder)
 	b.WriteString("export")
 	for k, v := range e.m {
-		b.WriteString(fmt.Sprintf(" %s=%s", k, v))
+		b.WriteString(fmt.Sprintf(` %s=%s`, k, v))
 	}
 	return b.String()
 }
@@ -51,7 +55,8 @@ func (e Environment) String() string {
 // Set sets the given key to the given value, after running all filters on the key value pair.
 // If any of the filters fail, the variable is not added to the Environment and an error is returned
 func (e Environment) Set(key, value string) (err error) {
-	filters, _ := filter.GlobalFilters[key]
+	filters, _ := filter.GlobalFilterGroups[key]
+	filters = append(filter.UniversalFilterGroup, filters...)
 
 	for _, f := range filters {
 		key, value, err = f.Filter(key, value)
