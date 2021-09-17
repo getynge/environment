@@ -3,6 +3,7 @@ package environment
 import (
 	"fmt"
 	"github.com/getynge/environment/filter"
+	"gopkg.in/alessio/shellescape.v1"
 	"os"
 	"strings"
 )
@@ -47,7 +48,7 @@ func (e Environment) String() string {
 	b := new(strings.Builder)
 	b.WriteString("export")
 	for k, v := range e.m {
-		b.WriteString(fmt.Sprintf(` %s=%s`, k, v))
+		b.WriteString(fmt.Sprintf(` %s=%s`, k, shellescape.Quote(v)))
 	}
 	return b.String()
 }
